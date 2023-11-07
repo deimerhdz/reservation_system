@@ -20,6 +20,7 @@ class Server{
     routes(){
         this.app.use('/api/auth',require('../routes/auth.routes'));
         this.app.use('/api/restaurants',require('../routes/restaurant.routes'));
+        this.app.use('/api/tables',require('../routes/table.routes'));
     }
     async database(){
         await dbConnect()
