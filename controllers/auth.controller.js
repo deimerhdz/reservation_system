@@ -47,8 +47,21 @@ try {
 }
     
 }
+const renewToken= async(req,res)=>{
+    const user = req.user;
+    
+  //generar jwt
+  const jwt = await generateJwt(user.id);
+    
+delete user.dataValues.password;
+    res.json({
+        user,
+        jwt
+    })
+}
 
 module.exports ={
     singIn,
-    singUp
+    singUp,
+    renewToken
 }
