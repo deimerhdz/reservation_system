@@ -1,3 +1,4 @@
+const Restaurant = require("../models/restaurant");
 const Role = require("../models/role");
 const User = require("../models/user");
 const { handleHttpError } = require("../utils/handleError");
@@ -14,21 +15,29 @@ const singIn = async(req, res)=>{
         });
         if(!user){
             handleHttpError(res,"User or password incorrect.",400)
+            return;
         }
+
         //verificar si el usuario esta activo
         if(!user.isActive){
             handleHttpError(res,"User or password incorrect.",401)
+            return;
         }
         //verificar la contraseña
         const validPassword = compare(password,user.password);
         if(!validPassword){
             handleHttpError(res,"User or password incorrect.",401)
+            return;
         }
         //generar jwt
         const jwt = await generateJwt(user.id);
+        const restaurant = await Restaurant.findOne({
+            where:{userId:user.id}
+        });
         delete user.dataValues.password;
         res.json({
             user,
+            restaurant,
             jwt
         })
     }catch(e){
@@ -49,13 +58,16 @@ try {
 }
 const renewToken= async(req,res)=>{
     const user = req.user;
-    
+    const restaurant = await Restaurant.findOne({
+        where:{userId:user.id}
+    });
   //generar jwt
   const jwt = await generateJwt(user.id);
     
 delete user.dataValues.password;
     res.json({
         user,
+        restaurant,
         jwt
     })
 }

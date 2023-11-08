@@ -1,12 +1,21 @@
 
 const Reservation = require("../models/reservation");
 const Table = require("../models/tables");
+const Restaurant = require("../models/restaurant")
 const { handleHttpError } = require("../utils/handleError");
 const moment = require("moment");
+const User = require("../models/user");
+const { Op } = require("sequelize");
 const getAllReservation = async(req,res)=>{
     try {
         const restaurantId = req.params.id;
-        const reservations = await Reservation.findAll({where:{restaurantId}});
+        const date = req.query.date;
+        console.log(date);
+        const reservations = await Reservation.findAll({include:[Restaurant,User],
+            where:{restaurantId,
+                reservationDate:{
+                    [Op.between]:[date+' 00:00:00',date+' 23:59:59']
+                }}});
         res.json(reservations);
     } catch (e) {
         console.log(e);
@@ -16,7 +25,7 @@ const getAllReservation = async(req,res)=>{
 const getAllReservationByClientId = async(req,res)=>{
     try {
         const clientId = req.params.id;
-        const reservations = await Reservation.findAll({where:{userId:clientId}});
+        const reservations = await Reservation.findAll({include:[Restaurant],where:{userId:clientId}});
         res.json(reservations);
     } catch (e) {
         console.log(e);
