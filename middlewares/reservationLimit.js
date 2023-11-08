@@ -14,7 +14,7 @@ const reservationLimitByRestaurant = async(req,res,next)=>{
         }
       })
     if(tablesCount >= process.env.LIMIT_RESERVATION_PER_RESTAURANT ){
-      handleHttpError(res,'ERROR_TABLES_LIMIT_OVERCOME',500)
+      handleHttpError(res,'ERROR_rESERVATION_LIMIT_OVERCOME',500)
       return ;
     }
     next();
