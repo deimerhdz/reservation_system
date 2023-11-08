@@ -3,7 +3,7 @@ const { handleHttpError } = require("../utils/handleError");
 
 const countTableByRestaurant = async(req,res,next)=>{
     const restaurantId = req.body.restaurantId;
-  
+    
     const tablesCount =await Table.count({
         where: {
             restaurantId
